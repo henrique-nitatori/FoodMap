@@ -1,0 +1,28 @@
+{
+  "name": "FoodMap",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "node src/app.js",
+    "test": "jest --verbose=true",
+    "lint": "eslint src/** test/** --fix"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "consign": "^0.1.6",
+    "express": "^4.17.1",
+    "knex": "^0.21.5",
+    "pg": "^8.3.2",
+    "bcrypt-nodejs": "^0.0.3"
+  },
+  "devDependencies": {
+    "eslint": "^7.7.0",
+    "eslint-config-airbnb": "^18.2.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-react": "^7.20.6",
+    "jest": "^26.4.0",
+    "supertest": "^4.0.2"
+  }
+}
