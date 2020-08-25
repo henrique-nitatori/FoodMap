@@ -11,7 +11,7 @@ module.exports = (app) => {
     return bcrypt.hashSync(password, salt);
   };
 
-  const criarUsuario = async (usuario) => {
+  const usuarioValidator = async (usuario) => {
     if (!usuario.email) { throw new ValidationError('Email é um atributo obrigatorio.'); }
     if (!usuario.usuario) { throw new ValidationError('Usuário é um atributo obrigatorio.'); }
     if (!usuario.senha) { throw new ValidationError('Senha é um atributo obrigatorio.'); }
@@ -23,11 +23,33 @@ module.exports = (app) => {
 
     const usuarioEncontradoPorNomeUsuario = await buscarUm({ usuario: usuario.usuario });
     if (usuarioEncontradoPorNomeUsuario) { throw new ValidationError('Usuário já cadastrado.'); }
+  };
 
+  const criarUsuario = async (usuario) => {
+    await usuarioValidator(usuario);
     const novoUsuario = { ...usuario };
     novoUsuario.senha = getPasswordEncrypt(usuario.senha);
     return app.db('usuario').insert(novoUsuario, ['id', 'usuario', 'email', 'nome', 'sobrenome']);
   };
 
-  return { buscarUm, criarUsuario };
+  const alterarUsuario = async (usuario) => {
+    if (!usuario.nome) { throw new ValidationError('Nome é um atributo obrigatorio.'); }
+    if (!usuario.sobrenome) { throw new ValidationError('Sobrenome é um atributo obrigatorio.'); }
+    if (usuario.usuario != null) { throw new ValidationError('O atributo usuário não pode ser alterado por essa rota.'); }
+    if (usuario.email != null) { throw new ValidationError('O atributo email não pode ser alterado por essa rota.'); }
+    return app.db('usuario').where({ id: usuario.id })
+      .update({
+        nome: usuario.nome,
+        sobrenome: usuario.sobrenome,
+        logradouro: usuario.logradouro,
+        bairro: usuario.bairro,
+        numero: usuario.numero,
+        estado: usuario.estado,
+        pais: usuario.pais,
+        telefone: usuario.telefone,
+      },
+      ['id', 'logradouro', 'nome', 'sobrenome', 'bairro', 'numero', 'estado', 'pais', 'telefone']);
+  };
+
+  return { buscarUm, criarUsuario, alterarUsuario };
 };

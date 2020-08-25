@@ -10,5 +10,15 @@ module.exports = (app) => {
       return next(error);
     }
   });
+  router.put('/:id', async (req, res, next) => {
+    try {
+      const usuarioAlterado = await app.services.usuario.alterarUsuario(
+        { ...req.body, id: req.params.id },
+      );
+      return res.status(200).json(usuarioAlterado);
+    } catch (error) {
+      return next(error);
+    }
+  });
   return router;
 };
